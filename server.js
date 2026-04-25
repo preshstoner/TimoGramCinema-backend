@@ -29,17 +29,12 @@ const corsOptions ={
   },
   credentials: true, // This is important because I used  auth to protect middleware
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedheaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   optionsSuccessStatus: 200 // For legacy browers (IE11)
 }; 
 
 //Time to apply CORS middleware BEFORE any routes
-app.use(cors(corsOptions)); 
-
-app.use(cors({
-  origin:['https://timogramcinema.netlify.app', 'http://localhost:3000'],
-  credentials: true
-})); 
+app.use(cors(corsOptions));  
 
 //Middleware
 app.use(express.json()); //Parse JSON bodies
