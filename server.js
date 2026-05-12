@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+const bookingsRoutes = require('./routes/bookingRoutes');
+const authRoutes = require('./routes/authRoutes');
+const movieRoutes = require('./routes/movieRoutes');
+
 //Load environment variables
 dotenv.config();
 
@@ -10,23 +14,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - This will be placed Right After creating the app
-const allowedOrigins = [
-    'https://timogramcinema.netlify.app', // The production frontend
-    'http://localhost:3000', //Local React dev server
-    // We could add more if needed later, e.g our deployed backend domain
-]; 
-
 const corsOptions ={
-  origin: function (origin, callback){
-      // This allows request with no origin (like mobile apps, postman,curl)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1){
-        callback(null, true); 
-      }else{
-        callback(new Error('Not allowed by CORS'));
-      }
-  },
+  origin: [
+    'https://timogramcinema.vercel.app',
+    'https://timogramcinema.netlify.app',
+    'http://localhost:3000'
+  ],
   credentials: true, // This is important because I used  auth to protect middleware
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -57,13 +50,13 @@ app.get('/', (req, res) => {
     res.json({message: 'Welcome to TimoGramCinema Backend API'});
 });
 
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/bookings', require('./routes/bookingRoutes'));
-app.use('/api/movies', require('./routes/movieRoutes'));
+app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingsRoutes);
 
-//TODO: Import and use routes later. app.use('/api/auth', require('./routes/authRoutes')); app.use('api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/movies', movieRoutes);
 
 //Start server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
